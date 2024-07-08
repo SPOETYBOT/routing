@@ -16,23 +16,9 @@ $(call ConfigVars,n)$(call ConfigVars,y)
 endef
 $(eval $(call shexport,batctl_config))
 
-MAKE_FLAGS += $$$$$(call shvar,batctl_config)
+MAKE_FLAGS += $(call shvar,batctl_config)
 
 define Package/batctl-tiny/install
 	$(INSTALL_DIR) $(1)/usr/libexec
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/batctl $(1)/usr/libexec/batctl-tiny
-endef
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/batctl
 
-define Package/batctl-default/install
-	$(INSTALL_DIR) $(1)/usr/libexec
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/batctl $(1)/usr/libexec/batctl-default
-endef
-
-define Package/batctl-full/install
-	$(INSTALL_DIR) $(1)/usr/libexec
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/batctl $(1)/usr/libexec/batctl-full
-endef
-
-$(eval $(call BuildPackage,batctl-default))
-$(eval $(call BuildPackage,batctl-tiny))
-$(eval $(call BuildPackage,batctl-full))
