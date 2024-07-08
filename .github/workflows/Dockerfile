@@ -1,5 +1,5 @@
-ARG ARCH=x86-64
-FROM openwrt/rootfs:$ARCH
+ARG Arm
+FROM openwrt/rootfs:$arm
 
 ADD entrypoint.sh /entrypoint.sh
 
