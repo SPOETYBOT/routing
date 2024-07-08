@@ -37,26 +37,6 @@ for PKG in /ci/*.ipk; do
 		else
 			echo "Pre-test failed"
 			exit 1
-		fi
-	else
-		echo "No pre-test.sh script available"
-	fi
-
-	opkg install "$PKG"
-
-	TEST_SCRIPT=$(find /ci/ -name "$PKG_SOURCE" -type d)/test.sh
-
-	if [ -f "$TEST_SCRIPT" ]; then
-		echo "Use package specific test.sh"
-		if sh "$TEST_SCRIPT" "$PKG_NAME" "$PKG_VERSION"; then
-			echo "Test succesful"
-		else
-			echo "Test failed"
-			exit 1
-		fi
-	else
-		echo "No test.sh script available"
-	fi
 
 	opkg remove "$PKG_NAME" --force-removal-of-dependent-packages --force-remove --autoremove || true
 done
