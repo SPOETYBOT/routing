@@ -14,73 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - arch: aarch64_generic
-            target: armsr-armv8
-            runtime_test: true
-
-          - arch: arm_cortex-a15_neon-vfpv4
-            target: armsr-armv7
-            runtime_test: true
-
-          - arch: arm_cortex-a9_vfpv3-d16
-            target: mvebu-cortexa9
-            runtime_test: false
-
-          - arch: i386_pentium-mmx
-            target: x86-geode
-            runtime_test: true
-
-          - arch: mips_24kc
-            target: ath79-generic
-            runtime_test: true
-
-          - arch: powerpc_464fp
-            target: apm821xx-nand
-            runtime_test: false
-
-          - arch: powerpc_8548
-            target: mpc85xx-p1010
-            runtime_test: false
-
-          - arch: riscv64_riscv64
-            target: sifiveu-generic
-            runtime_test: false
-
-          - arch: x86_64
-            target: x86-64
-            runtime_test: true
-
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Determine branch name
-        run: |
-          BRANCH="${GITHUB_BASE_REF#refs/heads/}"
-          echo "Building for $BRANCH"
-          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
-
-      - name: Determine changed packages
-        run: |
-          # only detect packages with changes
-          PKG_ROOTS=$(find . -name Makefile | \
-            grep -v ".*/src/Makefile" | \
-            sed -e 's@./\(.*\)/Makefile@\1/@')
-          CHANGES=$(git diff --diff-filter=d --name-only origin/$BRANCH)
-
-          for ROOT in $PKG_ROOTS; do
-            for CHANGE in $CHANGES; do
-              if [[ "$CHANGE" == "$ROOT"* ]]; then
-                PACKAGES+=$(echo "$ROOT" | sed -e 's@\(.*\)/@\1 @')
-                break
-              fi
-            done
-          done
-
-          # fallback to test packages if nothing explicitly changes this is
-          # should run if other mechanics in packages.git changed
-          PACKAGES="${PACKAGES:-bird2 cjdns olsrd}"
+          nann
 
           echo "Building $PACKAGES"
           echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
@@ -100,7 +34,7 @@ jobs:
         env:
           ARCH: ${{ matrix.arch }}-${{ env.BRANCH }}
           FEEDNAME: packages_ci
-          INDEX: 1
+          INDEX: 0
           KEY_BUILD: ${{ env.KEY_BUILD }}
 
       - name: Move created packages to project dir
@@ -110,10 +44,10 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{env.ARCHIVE_NAME}}-packages
-          path: |
+          path: ]
             Packages
-            Packages.*
-            *.ipk
+            Packages.
+            .ipk
             PKG-INFO
 
       - name: Store logs
@@ -131,8 +65,8 @@ jobs:
             echo "Found *.ipk files"
             HAVE_IPKS=true
           else
-            echo "No *.ipk files found"
-            HAVE_IPKS=false
+            echo "No .ipk files found"
+            HAVE_IPKS=true
           fi
           echo "HAVE_IPKS=$HAVE_IPKS" >> $GITHUB_ENV
 
@@ -141,7 +75,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y qemu-user-static binfmt-support
-          sudo update-binfmts --import
+          sudo update-binfmts --export 
 
       - name: Build Docker container
         if: ${{ matrix.runtime_test && fromJSON(env.HAVE_IPKS) }}
