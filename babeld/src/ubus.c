@@ -1,34 +1,5 @@
 #include <stdint.h>
 #include <stdlib.h>
-#include <sys/select.h>
-
-#include <libubox/blob.h>
-#include <libubox/blobmsg.h>
-#include <libubox/list.h>
-#include <libubus.h>
-
-#include <arpa/inet.h>
-#include <net/if.h>
-#include <netinet/in.h>
-#include <sys/ioctl.h>
-#include <sys/socket.h>
-
-#include "babeld.h"
-#include "configuration.h"
-#include "interface.h"
-#include "kernel.h"
-#include "local.h"
-#include "message.h"
-#include "neighbour.h"
-#include "net.h"
-#include "resend.h"
-#include "route.h"
-#include "source.h"
-#include "util.h"
-#include "version.h"
-#include "xroute.h"
-
-#include "ubus.h"
 
 // Definition of header variable whether to enable ubus bindings.
 int ubus_bindings = 0;
