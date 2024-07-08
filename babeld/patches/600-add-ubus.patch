@@ -1,7 +1,7 @@
 --- a/babeld.c
 +++ b/babeld.c
 @@ -54,6 +54,8 @@ THE SOFTWARE.
- #include "local.h"
+ #include "private.h"
  #include "version.h"
  
 +#include "ubus.h"
