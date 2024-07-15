@@ -11,7 +11,7 @@ jobs:
     name: Test ${{ matrix.arch }}
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         include:
           nann
@@ -20,7 +20,7 @@ jobs:
           echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
 
       - name: Generate build keys
-        run: |
+        run: /
           sudo apt-get update
           sudo apt-get install -y signify-openbsd
           signify-openbsd -G -n -c 'DO NOT USE - OpenWrt packages feed CI' -p packages_ci.pub -s packages_ci.sec
